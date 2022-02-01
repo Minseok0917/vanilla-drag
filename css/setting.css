@@ -1,0 +1,26 @@
+@charset 'utf-8';
+/* tag setting */
+*{ margin: 0; padding: 0; box-sizing: border-box; color: #333; font-family: sans-serif; }
+
+/* class setting */
+.flex{ display: flex; }
+.area{ margin: 0 auto; width: 1440px; height: 100%;  }
+
+/* global setting */
+::-webkit-scrollbar {
+  width: 5px;  
+  height: 5px;
+}
+::-webkit-scrollbar-track-piece {
+  background-color: #eee;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: #cdc1df;
+}
+::-webkit-scrollbar-thumb:active{
+	background: #ae99cd;
+}
+::-webkit-scrollbar-button {
+  display: none;
+}
