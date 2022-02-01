@@ -1,0 +1,44 @@
+:root{
+	--focusHeight:0px;		
+}
+
+/* @todo-container */
+.todo-container{
+	padding: 2rem;
+	gap:2rem;
+	height: 100vh;
+}
+
+/* @item-container */
+.item-container{
+	flex:1;
+	overflow: auto;
+	border: 1px solid #ccc;
+}
+
+/* @item */
+.item{
+	user-select: none;
+	padding: 0.5rem 0.75rem;
+}
+.item .title{
+	font-size: 0.75rem;
+	line-height: 1.2;
+	color: #aaa
+}
+.item:hover .title{
+	color: #666;
+}
+
+/* @item.select */
+.item.select{
+	cursor: pointer;
+	pointer-events: none;
+	border: 1px solid #333;
+}
+
+/* @item.focus */
+.item.focus~.item{
+	transition: 0.5s linear;
+	transform: translateY(var(--focusHeight));
+}
