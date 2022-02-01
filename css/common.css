@@ -1,0 +1,22 @@
+@charset 'utf-8';
+/* tag setting */
+*{ margin: 0; padding: 0; box-sizing: border-box; color: #333; font-family: sans-serif; }
+
+/* class setting */
+.flex{ display: flex; }
+.area{ margin: 0 auto; width: 1440px; height: 100%;  }
+
+
+
+/* @todo-container */
+.todo-container{
+	padding: 2rem;
+	gap:2rem;
+	height: 100vh;
+}
+
+/* @item-container*/
+.item-container{
+	flex:1;
+	border: 1px solid #ccc;
+}
