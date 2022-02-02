@@ -1,26 +1,25 @@
 import defineStore from '../plugin/store.js';
 
 const defaultState = () => ({
-	elements:[],
 	isDown:false,
-	selectElement:'',
-	selectPos:{}
+	$items:[],
+	$focusItem:{},
+	focusOption:{},
 });
 
 const state = defaultState();
 
 const getters = {
-	GET_STATE:(state)=>(state),
 	isDown:(state)=>(state.isDown),
-	elements:(state)=>(state.elements),
-	selectElement:(state)=>(state.selectElement),
-	selectDownPos:(state)=>(state.selectDownPos),
+	$items:(state)=>(state.$items),
+	$focusItem:(state)=>(state.$focusItem),
+	focusOption:(state)=>(state.focusOption),
 };
 const mutations = {
-	SET_ELEMENTS:(state,payload)=>(state.elements = payload),
-	SET_SELECT_ELEMENT:(state,payload)=>(state.selectElement = payload),
-	SET_SELECT_DOWN_POS:(state,payload)=>(state.selectDownPos = payload),
-	SET_IS_DOWN:(state,payload)=>(state.isDown = payload),
+	setIsDown:(state,payload)=>(state.isDown=payload),
+	setItems:(state,payload)=>(state.$items=payload),
+	setFocusItem:(state,payload)=>(state.$focusItem=payload),
+	setFocusOption:(state,payload)=>(state.focusOption=payload)
 };
 const actions = {
 

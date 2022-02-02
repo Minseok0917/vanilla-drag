@@ -1,32 +1,39 @@
 import useDrag from './store/drag.js';
 import {
-	queryAll,
-	elementOptions
+	queryAll 
 } from './utils.js';
 import {
 	mouseMove,
 	mouseUp,
-	$itemMouseDown
+	$itemContainerScroll,
+	$itemMouseDown,
 } from './event.js';
 
 
+const $itemContainer = queryAll('.item-container');
+const $items = queryAll('.item-container .item');
 
-const $items = queryAll('.item');
+const $itemContainerAddEvent = ($itemContainer) => {
+	$itemContainer.addEventListener('scroll',$itemContainerScroll);
+};
 const $itemAddEvent = ($item) => {
 	$item.addEventListener('mousedown',$itemMouseDown);
 };
-const $itemOption = ($item) => ({
-	...elementOptions($item)
-});
 
 function initial(){
-	window.addEventListener('mousemove',mouseMove);
+	window.addEventListener('mousemove',mouseMove); // drag, 충돌, 충돌 + 거리 비례 스크롤 감지
 	window.addEventListener('mouseup',mouseUp);
+	$itemContainer.forEach($itemContainerAddEvent);
 	$items.forEach($itemAddEvent);
-	useDrag.commit('SET_ELEMENTS',$items.map($itemOption));
+	
+	useDrag.commit('setItems',$items);
 }
 
 initial();
 
 
-// document.documentElement.style.setProperty('--a','blue');
+/*
+
+parent auto scroll 
+
+*/
