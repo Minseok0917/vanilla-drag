@@ -31,14 +31,14 @@
 }
 
 /* @item.select */
-.item.select{
+.item.focus{
 	cursor: pointer;
 	pointer-events: none;
 	border: 1px solid #333;
 }
 
 /* @item.focus */
-.item.focus~.item{
-	transition: 0.5s linear;
+/*.item.focus~.item{
+
 	transform: translateY(var(--focusHeight));
-}
+*/}
