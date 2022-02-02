@@ -18,6 +18,7 @@
 
 /* @item */
 .item{
+	/*transition: 0.125s linear;*/
 	user-select: none;
 	padding: 0.5rem 0.75rem;
 }
@@ -30,15 +31,15 @@
 	color: #666;
 }
 
-/* @item.select */
+/* @item.focus */
 .item.focus{
+	transition: 0s;
 	cursor: pointer;
 	pointer-events: none;
 	border: 1px solid #333;
 }
 
-/* @item.focus */
-/*.item.focus~.item{
-
+ /*@item.clash */
+.item.clash~.item{
 	transform: translateY(var(--focusHeight));
-*/}
+}

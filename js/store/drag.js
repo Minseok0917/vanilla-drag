@@ -5,6 +5,7 @@ const defaultState = () => ({
 	$items:[],
 	$focusItem:{},
 	focusOption:{},
+	$clashItem:{},
 });
 
 const state = defaultState();
@@ -14,12 +15,14 @@ const getters = {
 	$items:(state)=>(state.$items),
 	$focusItem:(state)=>(state.$focusItem),
 	focusOption:(state)=>(state.focusOption),
+	$clashItem:(state)=>(state.$clashItem),
 };
 const mutations = {
 	setIsDown:(state,payload)=>(state.isDown=payload),
 	setItems:(state,payload)=>(state.$items=payload),
 	setFocusItem:(state,payload)=>(state.$focusItem=payload),
-	setFocusOption:(state,payload)=>(state.focusOption=payload)
+	setFocusOption:(state,payload)=>(state.focusOption=payload),
+	setClashItem:(state,paylaod)=>(state.$clashItem=paylaod)
 };
 const actions = {
 

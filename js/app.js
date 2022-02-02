@@ -1,6 +1,6 @@
 import useDrag from './store/drag.js';
 import {
-	queryAll 
+	queryAll
 } from './utils.js';
 import {
 	mouseMove,
