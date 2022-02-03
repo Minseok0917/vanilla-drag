@@ -2,7 +2,9 @@ import useDrag from './store/drag.js';
 import {
 	setRoot,
 	isClash,
-	isClashTop,
+	isClashMiddleY,
+	isClashFocusTop,
+	isClashFocusBottom,
 	elementRect
 } from './utils.js';
 
@@ -13,7 +15,7 @@ export const mouseMove = function(e){
 	const {
 		$items,
 		$focusItem,
-		$clashItem,
+		clashIdx,
 		focusOption,
 	} = useDrag.getters;
 
@@ -33,46 +35,56 @@ export const mouseMove = function(e){
 		height:`${focusOption.height}px`,
 		transform:`translate(${focusMoveX}px,${focusMoveY}px)`
 	});
+
 	/*
+		62 , 72 / 2 = 36.5
+		62+36.5 = 98.5 - 30 = 68.5
 		clash 되면 transform 으로 focusHeight 만큼 내려가기 때문에 
 		clash 된 상태에선 계산을 따로 해주어야 한다. ( offset 에서 transform 의 위치를 참고하진 않음 )
+
+
+		@1. focusItem 에 bottom 이 clashItem 의 middleY 에 충돌하면 
+		clashItem에 clash 클래스가 추가 된다.
+
+		@2. focusItem 에 top 이 clashItem 의 middleY 에 충돌하면
+		clashItem 의 앞에 있는 형제에 클래스가 추가된다.
 	*/
 
 
 	const notFocusItems = $items.filter( $item => $item !== $focusItem );
 	const notFocusItemOptions = notFocusItems.map(elementRect);
-	const findClashItem = notFocusItemOptions.find( itemOption => isClash(focusMoveOption,itemOption) )
-	if( findClashItem ){
-		const $clashItem = findClashItem.element;
-		findClashItem.middleY += focusOption.height;
+	const findClashItem = notFocusItemOptions.find( itemOption => isClash(focusMoveOption,itemOption,clashIdx > -1 && clashIdx < itemOption.idx ) );
+	/*if( findClashItem ){
+		console.log('true');
+	}else{
+		console.log('false');
+	}*/
+	if( findClashItem ) {
+		const $findClashItem = findClashItem.element;
+		console.log($findClashItem);
+		let selectElement = $findClashItem;
 
-		let selectElement = $clashItem;
-		if( isClashTop(focusMoveOption,findClashItem) ){
-			// console.log('top');
-			selectElement = $clashItem.previousElementSibling;
+		
+		if( isClashFocusTop(focusMoveOption,findClashItem) ){
+			selectElement = $findClashItem.previousElementSibling ?? $findClashItem;
 		}
+		if( isClashFocusBottom(focusMoveOption,findClashItem) ){
+			selectElement = $findClashItem;
+		}
+		console.log(selectElement);
 
-		/*if( $clashItem !== selectElement  ){
+		if( clashIdx !== selectElement.dataset.idx ){
 			$items.forEach( $item => $item.classList.remove('clash') );
-			// setRoot('--focusHeight',`0px`);
-		}*/
+		};
+
 		selectElement.classList.add('clash');
 		setRoot('--focusHeight',`${focusOption.height}px`);
-		useDrag.commit('setClashItem',selectElement);
+		useDrag.commit('setClashIdx',selectElement.dataset.idx);
 	}else{
 		$items.forEach( $item => $item.classList.remove('clash') );
-		setRoot('--focusHeight',`0px`);
+		setRoot('--focusHeight',`${focusOption.height}px`);
+		useDrag.commit('setClashIdx',-1);
 	}
-	/*
-	충돌 공식
-		focusItem.width/2 < x 들어가야됨
-		maxHeight/2 
-
-
-		middleY 는 focusItem.top 이 닿으면 아래로 내려간다.
-		middleY 는 focusItem.bottom 이 닿으면 위로 올라간다.
-	*/
-
 }
 
 export const mouseUp = function(e){
