@@ -25,6 +25,7 @@ function initial(){
 	window.addEventListener('mouseup',mouseUp);
 	$itemContainer.forEach($itemContainerAddEvent);
 	$items.forEach($itemAddEvent);
+	$items.forEach( ($item,idx) => $item.setAttribute('data-idx',idx) );
 	
 	useDrag.commit('setItems',$items);
 }
