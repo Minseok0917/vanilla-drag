@@ -15,12 +15,15 @@
 	overflow: auto;
 	border: 1px solid #ccc;
 }
-
 /* @item */
 .item{
-	/*transition: 0.125s linear;*/
+	border: 1px solid #ddd;
+	transition: 0.125s linear;
 	user-select: none;
 	padding: 0.5rem 0.75rem;
+}
+.item:last-child{
+	height: var(--focusHeight);
 }
 .item .title{
 	font-size: 0.75rem;
@@ -40,6 +43,18 @@
 }
 
  /*@item.clash */
+
+.item.clash{
+	transform: translateY(var(--focusHeight));
+} 
 .item.clash~.item{
 	transform: translateY(var(--focusHeight));
+}
+.item.clash~.item:last-child{
+	padding: 0;
+	height: 0;
+}
+
+.item.clash:last-child{
+	transform: unset;
 }

@@ -2,7 +2,6 @@ import useDrag from './store/drag.js';
 import {
 	setRoot,
 	isClash,
-	isClashMiddleY,
 	isClashFocusTop,
 	isClashFocusBottom,
 	elementRect
@@ -48,34 +47,32 @@ export const mouseMove = function(e){
 
 		@2. focusItem 에 top 이 clashItem 의 middleY 에 충돌하면
 		clashItem 의 앞에 있는 형제에 클래스가 추가된다.
+
+
+		@current 
+			- clash
+		transition 도중에는 못 움직이게 이벤트 처리 X 
 	*/
 
 
 	const notFocusItems = $items.filter( $item => $item !== $focusItem );
 	const notFocusItemOptions = notFocusItems.map(elementRect);
-	const findClashItem = notFocusItemOptions.find( itemOption => isClash(focusMoveOption,itemOption,clashIdx > -1 && clashIdx < itemOption.idx ) );
-	/*if( findClashItem ){
-		console.log('true');
-	}else{
-		console.log('false');
-	}*/
+	const findClashItem = notFocusItemOptions.find( itemOption => isClash(focusMoveOption,itemOption,clashIdx > -1 && clashIdx <= itemOption.idx ) );
+	
 	if( findClashItem ) {
 		const $findClashItem = findClashItem.element;
-		console.log($findClashItem);
 		let selectElement = $findClashItem;
 
-		
 		if( isClashFocusTop(focusMoveOption,findClashItem) ){
-			selectElement = $findClashItem.previousElementSibling ?? $findClashItem;
-		}
-		if( isClashFocusBottom(focusMoveOption,findClashItem) ){
 			selectElement = $findClashItem;
+		}else if( isClashFocusBottom(focusMoveOption,findClashItem) ){
+			selectElement = $findClashItem.nextElementSibling ?? $findClashItem;
 		}
-		console.log(selectElement);
 
 		if( clashIdx !== selectElement.dataset.idx ){
 			$items.forEach( $item => $item.classList.remove('clash') );
 		};
+
 
 		selectElement.classList.add('clash');
 		setRoot('--focusHeight',`${focusOption.height}px`);
