@@ -1,4 +1,6 @@
 import useDrag from './store/drag.js';
+import useTodo from './store/todo.js';
+import render from './render.js';
 import {
 	setRoot,
 	isClash,
@@ -6,7 +8,6 @@ import {
 	isClashFocusBottom,
 	elementRect
 } from './utils.js';
-
 
 
 export const mouseMove = function(e){
@@ -32,27 +33,11 @@ export const mouseMove = function(e){
 		position:'fixed',
 		width:`${focusOption.width}px`,
 		height:`${focusOption.height}px`,
-		transform:`translate(${focusMoveX}px,${focusMoveY}px)`
+		left:`${focusOption.left}px`,
+		top:`${focusOption.top}px`,
+		transform:`translate(${focusMoveX}px,${focusMoveY}px)`,
+		zIndex:9999,
 	});
-
-	/*
-		62 , 72 / 2 = 36.5
-		62+36.5 = 98.5 - 30 = 68.5
-		clash 되면 transform 으로 focusHeight 만큼 내려가기 때문에 
-		clash 된 상태에선 계산을 따로 해주어야 한다. ( offset 에서 transform 의 위치를 참고하진 않음 )
-
-
-		@1. focusItem 에 bottom 이 clashItem 의 middleY 에 충돌하면 
-		clashItem에 clash 클래스가 추가 된다.
-
-		@2. focusItem 에 top 이 clashItem 의 middleY 에 충돌하면
-		clashItem 의 앞에 있는 형제에 클래스가 추가된다.
-
-
-		@current 
-			- clash
-		transition 도중에는 못 움직이게 이벤트 처리 X 
-	*/
 
 
 	const notFocusItems = $items.filter( $item => $item !== $focusItem );
@@ -71,7 +56,7 @@ export const mouseMove = function(e){
 
 		if( clashIdx !== selectElement.dataset.idx ){
 			$items.forEach( $item => $item.classList.remove('clash') );
-		};
+		}
 
 
 		selectElement.classList.add('clash');
@@ -85,9 +70,47 @@ export const mouseMove = function(e){
 }
 
 export const mouseUp = function(e){
+	if( !useDrag.getters.isDown ) return;
+	const {
+		$items,
+		$focusItem,
+		clashIdx,
+	} = useDrag.getters;
+	const { todos } = useTodo.getters;
+
+	if( clashIdx > -1 ){
+		const fidx = +$focusItem.dataset.idx; // 5
+		const cidx = +clashIdx; // 0 
+		const ftodo = todos.find( ({idx}) => idx === fidx );
+		const ctodo = todos.find( ({idx}) => idx === cidx );
+
+		if( ftodo.type !== ctodo.type ){
+			ftodo.type = ctodo.type;
+		}
+
+		useTodo.commit('setTodos',todos.map( todo => {
+			if( todo.idx === fidx ) todo.idx = cidx-1 < 0 ? 0 : cidx-1;
+			else if( todo.idx <= fidx && todo.idx >= cidx  ) todo.idx +=1;
+			else if( fidx < todo.idx && todo.idx < cidx ) todo.idx -=1;
+			return todo;
+		}).sort( (a,b) => a.idx-b.idx ));
+		render();
+
+		
+	}
+
+	useDrag.commit('setIsDown',false);
+	useDrag.commit('setFocusItem',{});
+	useDrag.commit('setFocusOption',{});
+	useDrag.commit('setClashIdx',-1);
+
+	$focusItem.classList.remove('focus');
+	$focusItem.removeAttribute('style');
+	$items.forEach( $item => $item.classList.remove('clash') );
+
 
 }
-
+//  처음시작시 이상함 + transiiton 도중 move 해서 이상함
 export const $itemMouseDown = function(e){	
 	useDrag.commit('setIsDown',true);
 	useDrag.commit('setFocusItem',this);
