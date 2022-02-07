@@ -17,12 +17,14 @@
 }
 /* @item */
 .item{
+	transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
 	border: 1px solid #ddd;
-	transition: 0.125s linear;
 	user-select: none;
 	padding: 0.5rem 0.75rem;
 }
 .item:last-child{
+	padding: 0;
+	border: 0;
 	height: var(--focusHeight);
 }
 .item .title{
