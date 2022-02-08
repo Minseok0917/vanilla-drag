@@ -1,52 +1,32 @@
-import useDrag from './store/drag.js';
-import useTodo from './store/todo.js';
-import render from './render.js';
-import {
-	queryAll
-} from './utils.js';
-import {
-	mouseMove,
-	mouseUp,
-	$itemContainerScroll,
-	$itemMouseDown,
-} from './event.js';
-
+import useStorage from './plugin/storage.js';
 
 /*
-const $itemContainer = queryAll('.item-container');
-const $items = queryAll('.item-container .item');
-
-const $itemContainerAddEvent = ($itemContainer) => {
-	$itemContainer.addEventListener('scroll',$itemContainerScroll);
-};
-const $itemAddEvent = ($item) => {
-	$item.addEventListener('mousedown',$itemMouseDown);
-};
+	localStorage 에 Todo 데이터가 없으면 
+	todo.json 에서 데이터를 가져오고 가공 후 Localstorage 에 집어넣기로
 */
 
+const storageName = 'todos';
 
-async function initial(){
-	const { todos } = await fetch('todo.json').then( res => res.json() );
-	useTodo.commit('setTodos',todos);
-
-	window.addEventListener('mousemove',mouseMove); // drag, 충돌, 충돌 + 거리 비례 스크롤 감지
-	window.addEventListener('mouseup',mouseUp);
-
-	render();
-	/*
-	$itemContainer.forEach($itemContainerAddEvent);
-	$items.forEach($itemAddEvent);
-	$items.forEach( ($item,idx) => $item.setAttribute('data-idx',idx) );
-	useDrag.commit('setItems',$items);
-*/
-
+async function init(){
+	const todos = useStorage.get(storageName) ?? getJSON('./todo.json',function({todos}){
+		const reduceInitValue = {
+			todo:[],
+			process:[],
+			close:[]
+		};
+		todos.reduce((acc,todo)=>({
+			...acc,
+			[todo.type]: [...acc[todo.type],todo]
+		}),reduceInitValue);
+		useStorage.set(storageName,todos);
+		return todos;
+	});
 }
 
-initial();
+async function getJSON(path,callback){
+	return await fetch(path)
+		.then( res => res.json() )
+		.then(callback)
+}
 
-
-/*
-
-parent auto scroll 
-
-*/
+init();
