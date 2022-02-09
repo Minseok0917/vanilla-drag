@@ -1,8 +1,8 @@
 # vanilla-drag
  
 ## 아직 미완성 
-- type 별로 index 전환 해야됨
-- 위치 전환 맨 아래 하자 있음
-- 아무 것도 없을때 넘어갈 수 있게 container event 추가 
-- auto scroll event 추가 
-- 이동 시 container hover 효과 추가
+1. [] Container 에 Item 추가 
+2. [] Item 충돌 기능 구현 ( delay 필요 ) 
+3. [] Item 마지막 충돌 예외처리 필요
+4. [] Item 위치 변경 
+5. [] Container Auto Scroll 구현
