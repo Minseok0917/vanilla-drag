@@ -15,6 +15,12 @@
 	overflow: auto;
 	border: 1px solid #ccc;
 }
+
+.item-container.select{
+	/*background: red;*/
+	border: 1px solid #b791f0;
+	outline: 2px solid #b791f0;
+}
 /* @item */
 .item{
 	transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
