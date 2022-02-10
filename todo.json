@@ -17,32 +17,32 @@
         },
         {
             "idx": 3,
-            "type":"close",
+            "type":"todo",
             "name": "4. Lorem ipsum dolor sit, amet, consectetur adipisicing elit. Voluptatibus, et, maxime voluptatum"
         },
         {
             "idx": 4,
-            "type":"close",
+            "type":"todo",
             "name": "5. Lorem ipsum dolor sit amet consectetur"
         },
         {
             "idx": 5,
-            "type":"close",
+            "type":"todo",
             "name": "6. Lorem ipsum dolor sit amet consectetur"
         },
         {
             "idx": 6,
-            "type":"close",
+            "type":"todo",
             "name": "7. Lorem ipsum dolor sit, amet, consectetur adipisicing elit. Voluptatibus, et, maxime voluptatum"
         },
         {
             "idx": 7,
-            "type":"close",
+            "type":"todo",
             "name": "8. Lorem ipsum dolor sit amet consectetur"
         },
         {
             "idx": 8,
-            "type":"close",
+            "type":"todo",
             "name": "9. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nostrum totam illo dolore deserunt quae nesciunt quo quasi explicabo, accusantium veritatis modi sapiente. Porro necessitatibus cum nisi ut est minima, laborum!"
         },
         {
