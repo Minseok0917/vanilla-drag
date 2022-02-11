@@ -2,7 +2,7 @@ export const elementRect = (element) => {
 	const {left, top, width, height} = element.getBoundingClientRect();
 	const middleX = left + width/2;
 	const middleY = top + height/2;
-	const idx = element.dataset.idx;
+	const idx = +element.dataset.idx;
 	return {
 		element,
 		idx,
@@ -16,10 +16,11 @@ export const elementRect = (element) => {
 };
 
 
-export const isClash = (focusOption,refOption) => {
+export const isClash = (focusOption,refOption,isClash) => {
+	console.log(isClash);
 	const {x, y} = getPosDistance(focusOption,refOption);
 	const isX = focusOption.width/2 > x;
-	const isY = refOption.height/2+focusOption.height/2 > y;
+	const isY = refOption.height/2+( isClash ? focusOption.height : 0 ) > y;
 	return isX && isY;	
 };
 

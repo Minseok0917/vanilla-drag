@@ -19,12 +19,12 @@ const convertToElement = ({idx,name}) => (`
 		<p class="title">${name}</p>
 	</div>
 `);
-const lastElement = (`<div class="item"></div>`);
+const lastElement = (idx) => (`<div class="item" data-idx="${idx}"></div>`);
 const renderItem = () => {
 	const {todos} = useTodo.getters;
 	$itemContainers.forEach( $itemContainer => {
 		const type = $itemContainer.dataset.type;
-		const itemHTML = todos[type].map(convertToElement).join('')+lastElement;
+		const itemHTML = todos[type].map(convertToElement).join('');//+lastElement(todos[type].length);
 		$itemContainer.innerHTML = itemHTML;
 	});
 }

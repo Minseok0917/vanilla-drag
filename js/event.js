@@ -1,17 +1,22 @@
 import useDrag from './store/drag.js';
 import useTodo from './store/todo.js';
 import { setTodos } from './utils/todo.js';
+import { setRoot } from './utils/dom.js';
 import {
 	elementRect,
-	isClashContainer
+	isClashContainer,
+	isClash,
+
 } from './utils/drag.js';
 
+let ad = false;
 
 export const globalMouseMove = function(event){
 	if( !useDrag.getters.isDown ) return;
 	const {
 		$itemContainers,
 		$items,
+		$clashItem,
 		$focusItem,
 		focusOption
 	} = useDrag.getters;
@@ -46,7 +51,31 @@ export const globalMouseMove = function(event){
 
 	const notFocusItems = $items.filter( $item => $item !== $focusItem );
 	const notFocusItemOptions = notFocusItems.map(elementRect);
-	// const findClashItem = notFocusItemOptions.find( itemOption => isClash(focusMoveOption,itemOption) );
+	const findClashItem = notFocusItemOptions.find( itemOption => isClash(focusMoveOption,itemOption, ($clashItem && +$clashItem.dataset.idx <= itemOption.idx ) ?? false  ) );
+
+	if( ad  ) return;
+	if( findClashItem ){
+		const focusTop = focusMoveOption.middleY - focusMoveOption.height/2;
+		const focusBottom = focusMoveOption.middleY + focusMoveOption.height/2;
+		const findY = findClashItem.middleY;
+		const t = Math.abs(focusTop - findY);
+		const b = Math.abs(focusBottom - findY);
+		let element = findClashItem.element;
+		/*
+		*/if( t > b && focusBottom > findY && t < 20 ) { // focusBottom Clash
+			element = element.nextElementSibling;
+		}
+		// ad = true;
+		// setTimeout(()=>  ad = false,130)
+
+		$items.forEach( $item => $item.classList.remove('clash') );
+
+		element.classList.add('clash');
+		setRoot('--focusHeight',`${focusOption.height}px`);
+		useDrag.commit('setClashItem',element);
+	}else{
+		$items.forEach( $item => $item.classList.remove('clash') );
+	}
 }
 export const globalMouseUp = function(){
 	if( !useDrag.getters.isDown ) return;

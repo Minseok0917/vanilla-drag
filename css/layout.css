@@ -28,11 +28,11 @@
 	user-select: none;
 	padding: 0.5rem 0.75rem;
 }
-.item:last-child{
+/*.item:last-child{
 	padding: 0;
 	border: 0;
 	height: var(--focusHeight);
-}
+}*/
 .item .title{
 	font-size: 0.75rem;
 	line-height: 1.2;
@@ -51,6 +51,7 @@
 }
 
  /*@item.clash */
+ 
 
 .item.clash{
 	transform: translateY(var(--focusHeight));
@@ -58,11 +59,12 @@
 .item.clash~.item{
 	transform: translateY(var(--focusHeight));
 }
-.item.clash~.item:last-child{
+/*.item.clash~.item:last-child{
 	padding: 0;
 	height: 0;
 }
 
 .item.clash:last-child{
 	transform: unset;
-}
+	border: 1px solid #eee;
+}*/
