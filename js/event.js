@@ -5,22 +5,22 @@ import { setRoot } from './utils/dom.js';
 import {
 	elementRect,
 	isClashContainer,
-	isClash,
-
+	isClash
 } from './utils/drag.js';
 
-let ad = false;
-
+let beforeY = null;
 export const globalMouseMove = function(event){
 	if( !useDrag.getters.isDown ) return;
 	const {
 		$itemContainers,
 		$items,
-		$clashItem,
 		$focusItem,
+		$clashItem,
 		focusOption
 	} = useDrag.getters;
 
+	const isDown = beforeY < event.offsetY;
+	beforeY = event.offsetY;
 	const focusMoveX = event.clientX-focusOption.downX;
 	const focusMoveY = event.clientY-focusOption.downY;
 	const focusMoveOption = {
@@ -30,6 +30,7 @@ export const globalMouseMove = function(event){
 	};
 
 	const $clashContainer =  $itemContainers.find( $itemContainer => isClashContainer(focusMoveOption,$itemContainer) );
+	const clashContainerType = $clashContainer?.dataset.type;
 	if($clashContainer){
 		$clashContainer.classList.add('select');
 		useDrag.commit('setClashContainer',$clashContainer);
@@ -49,32 +50,43 @@ export const globalMouseMove = function(event){
 		zIndex:9999,
 	});
 
+	const clashIdx = $clashItem?.dataset?.idx ?? false;
+	const focusHeight = $focusItem.offsetHeight;
+	const focusIdx = $focusItem.dataset.idx;
 	const notFocusItems = $items.filter( $item => $item !== $focusItem );
 	const notFocusItemOptions = notFocusItems.map(elementRect);
-	const findClashItem = notFocusItemOptions.find( itemOption => isClash(focusMoveOption,itemOption, ($clashItem && +$clashItem.dataset.idx <= itemOption.idx ) ?? false  ) );
-
-	if( ad  ) return;
+	const findClashItem = notFocusItemOptions.find( itemOption => isClash(focusMoveOption,itemOption, $clashItem && clashIdx <= itemOption.idx  ) );
 	if( findClashItem ){
 		const focusTop = focusMoveOption.middleY - focusMoveOption.height/2;
 		const focusBottom = focusMoveOption.middleY + focusMoveOption.height/2;
 		const findY = findClashItem.middleY;
-		const t = Math.abs(focusTop - findY);
-		const b = Math.abs(focusBottom - findY);
 		let element = findClashItem.element;
-		/*
-		*/if( t > b && focusBottom > findY && t < 20 ) { // focusBottom Clash
+
+		// console.log(findY);
+		if( focusBottom > findY+10 && isDown === true   ){
 			element = element.nextElementSibling;
+			// console.log('bottom');
 		}
-		// ad = true;
-		// setTimeout(()=>  ad = false,130)
+
+		if( focusTop < findY-10 && isDown === false ){
+			console.log('top');
+		}
+		// if( focusTodo )
+		// console.log(t,b);
+		// if( t > b && focusBottom > findY ) { // focusBottom Clash
+		// 	element = element.nextElementSibling ?? element;
+		// }
 
 		$items.forEach( $item => $item.classList.remove('clash') );
 
+		// console.log(findClashItem)
 		element.classList.add('clash');
 		setRoot('--focusHeight',`${focusOption.height}px`);
 		useDrag.commit('setClashItem',element);
 	}else{
 		$items.forEach( $item => $item.classList.remove('clash') );
+		setRoot('--focusHeight',`0px`);
+		useDrag.commit('setClashItem',null);
 	}
 }
 export const globalMouseUp = function(){
@@ -127,4 +139,5 @@ export const $itemMouseDown = function(event){
 		downY:event.clientY,
 		...elementRect(this)
 	});
+	beforeY = event.offsetY;
 }

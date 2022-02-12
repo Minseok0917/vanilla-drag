@@ -16,21 +16,21 @@ export const elementRect = (element) => {
 };
 
 
-export const isClash = (focusOption,refOption,isClash) => {
-	console.log(isClash);
+export const isClash = (focusOption,refOption,isClash=false) => {
 	const {x, y} = getPosDistance(focusOption,refOption);
 	const isX = focusOption.width/2 > x;
-	const isY = refOption.height/2+( isClash ? focusOption.height : 0 ) > y;
+	const addHeight = isClash ? focusOption.height : 0;
+	const isY = (refOption.height/2)+addHeight  > y;
 	return isX && isY;	
 };
 
 
 export const isClashFocusTop = (focusOption,refOption) => {
 	const focusTop = focusOption.middleY-focusOption.height/2;
-	return focusTop < refOption.middleY &&  refOption.middleY-focusTop < 5 ;
+	return focusTop < refOption.middleY;
 };
 export const isClashFocusBottom = (focusOption,refOption)=>{
-	const focusBottom = focusOption.middleY+focusOption.height/2;
+	const focusBottom = focusOption.middleY+focusOption.height/2;	
 	return focusBottom > refOption.middleY;
 }
 

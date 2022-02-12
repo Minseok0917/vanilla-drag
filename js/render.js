@@ -33,6 +33,7 @@ const renderItem = () => {
 const itemEvent = ($item) => {
 	$item.addEventListener('mousedown',$itemMouseDown);
 };
+
 { 
 	const itemContainerEvent = ($itemContainer) => {
 		// $itemContainer.addEventListener('')
