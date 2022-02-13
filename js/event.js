@@ -8,6 +8,10 @@ import {
 	isClash
 } from './utils/drag.js';
 
+
+/*
+mouseUp First 놓고 떼기 그대로 안됨
+*/
 let beforeY = null;
 export const globalMouseMove = function(event){
 	if( !useDrag.getters.isDown ) return;
@@ -62,24 +66,12 @@ export const globalMouseMove = function(event){
 		const findY = findClashItem.middleY;
 		let element = findClashItem.element;
 
-		// console.log(findY);
 		if( focusBottom > findY+10 && isDown === true   ){
-			element = element.nextElementSibling;
-			// console.log('bottom');
+			element = element.nextElementSibling ?? element;
 		}
-
-		if( focusTop < findY-10 && isDown === false ){
-			console.log('top');
-		}
-		// if( focusTodo )
-		// console.log(t,b);
-		// if( t > b && focusBottom > findY ) { // focusBottom Clash
-		// 	element = element.nextElementSibling ?? element;
-		// }
 
 		$items.forEach( $item => $item.classList.remove('clash') );
 
-		// console.log(findClashItem)
 		element.classList.add('clash');
 		setRoot('--focusHeight',`${focusOption.height}px`);
 		useDrag.commit('setClashItem',element);
@@ -129,6 +121,58 @@ export const globalMouseUp = function(){
 		useDrag.commit('setClashItem',null);
 		useDrag.commit('setFocusItem',null);
 		setTodos(todos);
+	}else if( $clashContainer !== null && $clashItem !== null ){
+		const clashType = $clashContainer.dataset.type;
+		const $focusContainer = $focusItem.closest('.item-container');
+		const clashIdx = $clashItem.dataset.idx;
+		const focusIdx = +$focusItem.dataset.idx;
+		const focusType = $focusContainer.dataset.type;
+		const typeTodos = todos[focusType];
+		const clashTodos = todos[clashType];
+
+		if( focusType === clashType ){
+			todos[focusType] = typeTodos.map( todo => { // focusIdx 가 clashIdx 위로 가야함
+				if( focusIdx === todo.idx ){
+					todo.idx = +clashIdx;
+				}else if( todo.idx < focusIdx && clashIdx <= todo.idx ){
+					todo.idx += 1;
+				}else if( focusIdx < todo.idx && todo.idx <= clashIdx){
+					todo.idx -=1;
+				}
+				return todo;
+			});
+			useDrag.commit('setIsDown',false);
+			useDrag.commit('setClashContainer',null);
+			useDrag.commit('setClashItem',null);
+			useDrag.commit('setFocusItem',null);
+			setTodos(todos);
+		}else{
+			console.log(focusIdx,typeTodos);
+			const findFocusTodo = typeTodos.find( ({idx}) => idx === focusIdx );
+			todos[focusType] = typeTodos.filter( ({idx}) => focusIdx !== idx  ).map( todo => {
+				if( focusIdx < todo.idx ){
+					todo.idx -=1;
+				}
+				return todo;
+			});
+			console.log(clashType,findFocusTodo);
+			findFocusTodo.type = clashType;
+			findFocusTodo.idx = +clashIdx;
+
+			todos[clashType] = [...clashTodos.map( todo => {
+				if( clashIdx <= todo.idx ){
+					todo.idx +=1;
+				}
+				return todo;
+			}),findFocusTodo];
+			useDrag.commit('setIsDown',false);
+			useDrag.commit('setClashContainer',null);
+			useDrag.commit('setClashItem',null);
+			useDrag.commit('setFocusItem',null);
+			setTodos(todos);
+		}
+
+		// setTodos
 	}
 }
 export const $itemMouseDown = function(event){
