@@ -1,10 +1,11 @@
 export const elementRect = (element) => {
-	const {left, top, width, height} = element.getBoundingClientRect();
+	const {left, top, bottom,width, height} = element.getBoundingClientRect();
 	const middleX = left + width/2;
 	const middleY = top + height/2;
 	const idx = +element.dataset.idx;
 	return {
 		element,
+		bottom,
 		idx,
 		left,
 		top,

@@ -13,6 +13,7 @@ import {
 mouseUp First 놓고 떼기 그대로 안됨
 */
 let beforeY = null;
+let scrollLoop  = null; 
 export const globalMouseMove = function(event){
 	if( !useDrag.getters.isDown ) return;
 	const {
@@ -85,6 +86,7 @@ export const globalMouseUp = function(){
 	if( !useDrag.getters.isDown ) return;
 	const { todos } = useTodo.getters;
 	const { 
+		$itemContainers,
 		$clashContainer,
 		$focusItem,
 		$clashItem,
@@ -147,7 +149,6 @@ export const globalMouseUp = function(){
 			useDrag.commit('setFocusItem',null);
 			setTodos(todos);
 		}else{
-			console.log(focusIdx,typeTodos);
 			const findFocusTodo = typeTodos.find( ({idx}) => idx === focusIdx );
 			todos[focusType] = typeTodos.filter( ({idx}) => focusIdx !== idx  ).map( todo => {
 				if( focusIdx < todo.idx ){
@@ -155,7 +156,6 @@ export const globalMouseUp = function(){
 				}
 				return todo;
 			});
-			console.log(clashType,findFocusTodo);
 			findFocusTodo.type = clashType;
 			findFocusTodo.idx = +clashIdx;
 
@@ -174,6 +174,7 @@ export const globalMouseUp = function(){
 
 		// setTodos
 	}
+	$itemContainers.forEach( $itemContainer => $itemContainer.classList.remove('select') );
 }
 export const $itemMouseDown = function(event){
 	useDrag.commit('setIsDown',true);
@@ -185,3 +186,4 @@ export const $itemMouseDown = function(event){
 	});
 	beforeY = event.offsetY;
 }
+

@@ -24,7 +24,7 @@ const renderItem = () => {
 	const {todos} = useTodo.getters;
 	$itemContainers.forEach( $itemContainer => {
 		const type = $itemContainer.dataset.type;
-		const itemHTML = todos[type].map(convertToElement).join('');//+lastElement(todos[type].length);
+		const itemHTML = todos[type].map(convertToElement).join('');
 		$itemContainer.innerHTML = itemHTML;
 	});
 }
@@ -35,10 +35,6 @@ const itemEvent = ($item) => {
 };
 
 { 
-	const itemContainerEvent = ($itemContainer) => {
-		// $itemContainer.addEventListener('')
-	};
-	$itemContainers.forEach(itemContainerEvent);
 	useDrag.commit('setItemContainers',$itemContainers);
 }
 
